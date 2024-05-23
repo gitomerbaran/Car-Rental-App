@@ -43,6 +43,7 @@ List<String> commits = [
   "Harika bir deneyimdi! Personel çok profesyoneldi ve araç tertemizdi. Fiyatlar da oldukça uygun. Kesinlikle yeniden tercih ederim.",
 ];
 
+
 final selectedCity = StateProvider<String>((ref) {
   return "İstanbul";
 });
