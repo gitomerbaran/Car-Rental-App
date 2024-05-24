@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatelessWidget {
@@ -20,335 +21,338 @@ class HomePage extends StatelessWidget {
       splitScreenMode: false,
       builder: (_, child) {
         return Scaffold(
-          body: Column(
-            children: <Widget>[
-              const HomePageAppBar(),
-              SizedBox(height: 20.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 15.w),
-                    child: Icon(
-                      Icons.person,
-                      color: appBarColor,
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const HomePageAppBar(),
+                SizedBox(height: 20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 15.w),
+                      child: Icon(
+                        Icons.person,
+                        color: appBarColor,
+                      ),
                     ),
-                  ),
-                  const NameWidget(),
-                  Container(
+                    const NameWidget(),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 9,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                        width: 100.w,
+                        height: 30.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
+                          border: Border.all(width: 1.5, color: appBarColor),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 3.w),
+                            const BalanceIcon(),
+                            SizedBox(width: 10.w),
+                            const Text(
+                              ":",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(width: 15.w),
+                            const BalanceText(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 5.w,
+                      ),
+                      child: const AddBalanceButton(),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 30.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Container(
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 9,
+                          spreadRadius: 2,
+                          blurRadius: 5,
                           offset: const Offset(0, 3),
                         ),
                       ],
                     ),
                     child: Container(
-                      width: 100.w,
-                      height: 30.h,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
-                        border: Border.all(width: 1.5, color: appBarColor),
+                        border: Border.all(
+                          color: appBarColor,
+                          width: 1.3,
+                        ),
                       ),
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 3.w),
-                          const BalanceIcon(),
-                          SizedBox(width: 10.w),
-                          const Text(
-                            ":",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(width: 15.w),
-                          const BalanceText(),
-                        ],
+                      height: 150.h,
+                      width: double.infinity,
+                      child: PageView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return CarouselSlider(
+                            options: CarouselOptions(
+                              autoPlay: true,
+                              autoPlayInterval: const Duration(seconds: 3),
+                              enlargeCenterPage: false,
+                              padEnds: false,
+                              viewportFraction: 1,
+                              aspectRatio: 2.0,
+                            ),
+                            items: [
+                              CommitWidget(
+                                rating: 4,
+                                name: "Ali K***",
+                                text: commits[0],
+                              ),
+                              CommitWidget(
+                                rating: 4.5,
+                                name: "Canan T***",
+                                text: commits[1],
+                              ),
+                              CommitWidget(
+                                rating: 3.5,
+                                name: "Talha B***",
+                                text: commits[2],
+                              ),
+                              CommitWidget(
+                                rating: 5,
+                                name: "Berkay S***",
+                                text: commits[3],
+                              ),
+                              CommitWidget(
+                                rating: 4.5,
+                                name: "Selin K***",
+                                text: commits[4],
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 5.w,
-                    ),
-                    child: const AddBalanceButton(),
-                  ),
-                ],
-              ),
-              SizedBox(height: 30.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(
-                        color: appBarColor,
-                        width: 1.3,
-                      ),
-                    ),
-                    height: 150.h,
-                    width: double.infinity,
-                    child: PageView.builder(
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return CarouselSlider(
-                          options: CarouselOptions(
-                            autoPlay: true,
-                            autoPlayInterval: const Duration(seconds: 3),
-                            enlargeCenterPage: false,
-                            padEnds: false,
-                            viewportFraction: 1,
-                            aspectRatio: 2.0,
-                          ),
-                          items: [
-                            CommitWidget(
-                              rating: 4,
-                              name: "Ali K***",
-                              text: commits[0],
-                            ),
-                            CommitWidget(
-                              rating: 4.5,
-                              name: "Canan T***",
-                              text: commits[1],
-                            ),
-                            CommitWidget(
-                              rating: 3.5,
-                              name: "Talha B***",
-                              text: commits[2],
-                            ),
-                            CommitWidget(
-                              rating: 5,
-                              name: "Berkay S***",
-                              text: commits[3],
-                            ),
-                            CommitWidget(
-                              rating: 4.5,
-                              name: "Selin K***",
-                              text: commits[4],
-                            ),
-                          ],
-                        );
-                      },
                     ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: 30.h),
-              //Şehir seçimi
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0,
-                          blurRadius: 20,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                SizedBox(height: 30.h),
+                //Şehir seçimi
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0,
+                            blurRadius: 20,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                          height: 80,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: appBarColor, width: 2),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Alış Yeri",
+                                style: GoogleFonts.roboto(
+                                    textStyle: TextStyle(
+                                        fontSize: 13, color: appBarColor)),
+                              ),
+                              const SizedBox(height: 5),
+                              const FirstCity(),
+                            ],
+                          )),
                     ),
-                    child: Container(
-                        height: 80,
-                        width: 120,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: appBarColor, width: 2),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Alış Yeri",
-                              style: GoogleFonts.roboto(
-                                  textStyle: TextStyle(
-                                      fontSize: 13, color: appBarColor)),
-                            ),
-                            const SizedBox(height: 5),
-                            const FirstCity(),
-                          ],
-                        )),
-                  ),
-                  SizedBox(width: 30.w),
-                  const ChangeCityButton(),
-                  SizedBox(width: 30.w),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0,
-                          blurRadius: 20,
+                    SizedBox(width: 30.w),
+                    const ChangeCityButton(),
+                    SizedBox(width: 30.w),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0,
+                            blurRadius: 20,
 
-                          offset: const Offset(0, 2), // Gölgenin konumu
-                        ),
-                      ],
+                            offset: const Offset(0, 2), // Gölgenin konumu
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                          height: 80,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: appBarColor, width: 2),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Varış Yeri",
+                                style: GoogleFonts.roboto(
+                                    textStyle: TextStyle(
+                                        fontSize: 13, color: appBarColor)),
+                              ),
+                              const SizedBox(height: 5),
+                              const SecondCity(),
+                            ],
+                          )),
                     ),
-                    child: Container(
-                        height: 80,
-                        width: 120,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: appBarColor, width: 2),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Varış Yeri",
-                              style: GoogleFonts.roboto(
-                                  textStyle: TextStyle(
-                                      fontSize: 13, color: appBarColor)),
-                            ),
-                            const SizedBox(height: 5),
-                            const SecondCity(),
-                          ],
-                        )),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10.h),
-              // Araç modeli ve Marka
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0,
-                          blurRadius: 20,
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                // Araç modeli ve Marka
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0,
+                            blurRadius: 20,
 
-                          offset: const Offset(0, 2), // Gölgenin konumu
-                        ),
-                      ],
+                            offset: const Offset(0, 2), // Gölgenin konumu
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                          height: 80,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: appBarColor, width: 2),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Araç Türü",
+                                style: GoogleFonts.roboto(
+                                    textStyle: TextStyle(
+                                        fontSize: 13, color: appBarColor)),
+                              ),
+                              const SizedBox(height: 5),
+                              const VehicleType(),
+                            ],
+                          )),
                     ),
-                    child: Container(
-                        height: 80,
-                        width: 120,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: appBarColor, width: 2),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Araç Türü",
-                              style: GoogleFonts.roboto(
-                                  textStyle: TextStyle(
-                                      fontSize: 13, color: appBarColor)),
-                            ),
-                            const SizedBox(height: 5),
-                            const VehicleType(),
-                          ],
-                        )),
-                  ),
-                  SizedBox(width: 88.w),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0,
-                          blurRadius: 20,
+                    SizedBox(width: 88.w),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0,
+                            blurRadius: 20,
 
-                          offset: const Offset(0, 2), // Gölgenin konumu
-                        ),
-                      ],
+                            offset: const Offset(0, 2), // Gölgenin konumu
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                          height: 80,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: appBarColor, width: 2),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Marka",
+                                style: GoogleFonts.roboto(
+                                    textStyle: TextStyle(
+                                        fontSize: 13, color: appBarColor)),
+                              ),
+                              const SizedBox(height: 5),
+                              const VehicleBrand(),
+                            ],
+                          )),
                     ),
-                    child: Container(
-                        height: 80,
-                        width: 120,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: appBarColor, width: 2),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Marka",
-                              style: GoogleFonts.roboto(
-                                  textStyle: TextStyle(
-                                      fontSize: 13, color: appBarColor)),
-                            ),
-                            const SizedBox(height: 5),
-                            const VehicleBrand(),
-                          ],
-                        )),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10.h),
-              // Tarih
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0,
-                          blurRadius: 20,
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                // Tarih
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0,
+                            blurRadius: 20,
 
-                          offset: const Offset(0, 2), // Gölgenin konumu
-                        ),
-                      ],
+                            offset: const Offset(0, 2), // Gölgenin konumu
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                          height: 80,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: appBarColor, width: 2),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Kiralam Süresi",
+                                style: GoogleFonts.roboto(
+                                    textStyle: TextStyle(
+                                        fontSize: 13, color: appBarColor)),
+                              ),
+                              const SizedBox(height: 5),
+                              const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  RentTime(),
+                                  CalendarWidget(),
+                                ],
+                              ),
+                            ],
+                          )),
                     ),
-                    child: Container(
-                        height: 80,
-                        width: 120,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: appBarColor, width: 2),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Kiralam Süresi",
-                              style: GoogleFonts.roboto(
-                                  textStyle: TextStyle(
-                                      fontSize: 13, color: appBarColor)),
-                            ),
-                            const SizedBox(height: 5),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                RentTime(),
-                                CalendarWidget(),
-                              ],
-                            ),
-                          ],
-                        )),
-                  ),
-                ],
-              ),
-              SizedBox(height: 40.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 130.w),
-                child: const FindButton(),
-              )
-            ],
+                  ],
+                ),
+                SizedBox(height: 40.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 130.w),
+                  child: const FindButton(),
+                )
+              ],
+            ),
           ),
         );
       },
@@ -356,15 +360,17 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class FindButton extends StatelessWidget {
+class FindButton extends ConsumerWidget {
   const FindButton({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        performDatabaseOperation(ref, context);
+      },
       child: Container(
         height: 50,
         width: double.infinity,
@@ -373,13 +379,18 @@ class FindButton extends StatelessWidget {
           color: appBarColor,
         ),
         child: Center(
-            child: Text(
-          "Ara",
-          style: GoogleFonts.roboto(
-              textStyle: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w600),
-              fontSize: 20),
-        )),
+            child: ref.watch(isLoading)
+                ? SpinKitFadingCircle(
+                    color: Colors.white,
+                    size: 30,
+                  )
+                : Text(
+                    "Ara",
+                    style: GoogleFonts.roboto(
+                        textStyle: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w600),
+                        fontSize: 20),
+                  )),
       ),
     );
   }

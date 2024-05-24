@@ -115,3 +115,7 @@ class RentTimeNotifier extends StateNotifier<int> {
 }
 
 final rentTimeProvider = StateNotifierProvider((ref) => RentTimeNotifier());
+
+final isLoading = StateProvider<bool>((ref) {
+  return false;
+});

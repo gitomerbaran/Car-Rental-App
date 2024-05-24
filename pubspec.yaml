@@ -43,6 +43,7 @@ dependencies:
   auto_size_text: ^3.0.0
   flutter_rating_bar:
   carousel_slider: ^4.2.1
+  flutter_spinkit:
 dev_dependencies:
   flutter_test:
     sdk: flutter
