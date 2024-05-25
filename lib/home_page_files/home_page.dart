@@ -630,6 +630,7 @@ class AddBalanceButton extends StatelessWidget {
     return InkWell(
       onTap: () {
         //Bakiye yükleme sayfası
+        addBalanceMethod(context);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -859,4 +860,60 @@ class CommitWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Future addBalanceMethod(BuildContext context) async {
+  return await showDialog<Future>(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 5.h),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Colors.white,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 20.h, left: 20.w),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: appBarColor,
+                          size: 30,
+                        ),
+                      ),
+                      // SizedBox(width: 80.w),
+                      Expanded(
+                        child: Center(
+                          child: Text("Bakiye Yükleme",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.berkshireSwash(
+                                  textStyle: TextStyle(
+                                fontSize: 20.h,
+                                color: appBarColor,
+                                fontWeight: FontWeight.w600,
+                              ))),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }

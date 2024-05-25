@@ -117,14 +117,17 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                           size: 30,
                         ),
                       ),
-                      SizedBox(width: 80.w),
-                      Text("RentEasy",
-                          style: GoogleFonts.berkshireSwash(
-                              textStyle: TextStyle(
-                            fontSize: 20.h,
-                            color: appBarColor,
-                            fontWeight: FontWeight.w600,
-                          ))),
+                      Expanded(
+                        child: Center(
+                          child: Text("RentEasy",
+                              style: GoogleFonts.berkshireSwash(
+                                  textStyle: TextStyle(
+                                fontSize: 25.h,
+                                color: appBarColor,
+                                fontWeight: FontWeight.w600,
+                              ))),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -140,9 +143,15 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                             SizedBox(height: 15.h),
                             Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Color.fromARGB(255, 247, 239, 239),
-                              ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color.fromARGB(255, 247, 239, 239),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 5,
+                                      color: Color.fromARGB(255, 163, 161, 161),
+                                      offset: Offset(1, 3),
+                                    )
+                                  ]),
                               height: 150.h,
                               width: double.infinity,
                               child: Padding(
@@ -191,16 +200,19 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                                                     color: const Color.fromARGB(
                                                         255, 135, 129, 129),
                                                     blurRadius: 5,
-                                                    offset: Offset(0, 3))
+                                                    offset: Offset(0, 1))
                                               ]),
-                                          child: Text(
-                                            textAlign: TextAlign.center,
-                                            "Rent",
-                                            style: GoogleFonts.roboto(
-                                                textStyle: TextStyle(
-                                                    fontSize: 15.h,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.white)),
+                                          child: Center(
+                                            child: Text(
+                                              textAlign: TextAlign.center,
+                                              "Rent",
+                                              style: GoogleFonts.roboto(
+                                                  textStyle: TextStyle(
+                                                      fontSize: 15.h,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.white)),
+                                            ),
                                           ),
                                         ),
                                       )
