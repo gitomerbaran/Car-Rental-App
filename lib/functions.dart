@@ -1,7 +1,6 @@
 import 'package:car_rental_app/home_page_files/home_page_provider.dart';
 import 'package:car_rental_app/home_page_files/models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +20,7 @@ Future<void> performDatabaseOperation(
   try {
     // Veritabanı işlemini burada gerçekleştir
     // Bu kısmı kendi veritabanı sorgunuzla değiştirin
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     rentPage(context, ref);
   } catch (e) {
     errorDialog(context);
@@ -54,7 +53,7 @@ Future<void> errorDialog(BuildContext context) {
               Text(
                 "Araç Bulunamadı",
                 style: GoogleFonts.roboto(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                   fontSize: 25,
                 )),
               ),
@@ -73,7 +72,7 @@ Future<void> errorDialog(BuildContext context) {
                     "Kapat",
                     style: GoogleFonts.roboto(
                         textStyle:
-                            TextStyle(fontSize: 20, color: Colors.white)),
+                            const TextStyle(fontSize: 20, color: Colors.white)),
                   ),
                 ),
               )
@@ -84,7 +83,7 @@ Future<void> errorDialog(BuildContext context) {
     },
   );
 
-  ;
+  
 }
 
 Future<void> rentPage(BuildContext context, WidgetRef ref) {
@@ -144,8 +143,8 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                             Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Color.fromARGB(255, 247, 239, 239),
-                                  boxShadow: [
+                                  color: const Color.fromARGB(255, 247, 239, 239),
+                                  boxShadow: const [
                                     BoxShadow(
                                       blurRadius: 5,
                                       color: Color.fromARGB(255, 163, 161, 161),
@@ -195,9 +194,9 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                                               color: appBarColor,
                                               borderRadius:
                                                   BorderRadius.circular(20),
-                                              boxShadow: [
+                                              boxShadow: const [
                                                 BoxShadow(
-                                                    color: const Color.fromARGB(
+                                                    color: Color.fromARGB(
                                                         255, 135, 129, 129),
                                                     blurRadius: 5,
                                                     offset: Offset(0, 1))
@@ -238,7 +237,7 @@ Widget vehicleCardText(String title, String data) {
   return Row(
     children: [
       Text(
-        title + ": ",
+        "$title: ",
         style: GoogleFonts.roboto(
             textStyle: TextStyle(
           fontSize: 15.h,

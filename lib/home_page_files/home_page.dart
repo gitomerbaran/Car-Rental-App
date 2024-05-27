@@ -380,7 +380,7 @@ class FindButton extends ConsumerWidget {
         ),
         child: Center(
             child: ref.watch(isLoading)
-                ? SpinKitFadingCircle(
+                ? const SpinKitFadingCircle(
                     color: Colors.white,
                     size: 30,
                   )
@@ -863,6 +863,8 @@ class CommitWidget extends StatelessWidget {
 }
 
 Future addBalanceMethod(BuildContext context) async {
+  TextEditingController _controller = TextEditingController();
+  TextEditingController _balanceController = TextEditingController();
   return await showDialog<Future>(
     context: context,
     builder: (context) {
@@ -909,6 +911,101 @@ Future addBalanceMethod(BuildContext context) async {
                     ],
                   ),
                 ),
+                SizedBox(height: 20.h),
+                BalanceInputs(
+                  maxL: 16,
+                  hintText: "Kart Numarası",
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 10.h),
+                BalanceInputs(
+                    maxL: 30,
+                    hintText: "Adı-Soyadı",
+                    keyboardType: TextInputType.name),
+                SizedBox(height: 10.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 100.w,
+                        child: Form(
+                          child: TextFormField(
+                            controller: _controller,
+                            onChanged: (value) {
+                              if (value.length == 3 && !value.contains('/')) {
+                                value = value.substring(0, 2) +
+                                    '/' +
+                                    value.substring(2);
+                              }
+                              _controller.value = TextEditingValue(
+                                text: value,
+                                selection: TextSelection.collapsed(
+                                    offset: value.length),
+                              );
+                            },
+                            maxLength: 5,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                counterText: "",
+                                hintStyle: GoogleFonts.roboto(),
+                                hintText: "Ay/Yıl",
+                                isCollapsed: false,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: appBarColor,
+                                    )),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: appBarColor)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: appBarColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                )),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 100.w,
+                        child: Form(
+                          child: TextFormField(
+                            maxLength: 3,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                counterText: "",
+                                hintStyle: GoogleFonts.roboto(),
+                                hintText: "CCV",
+                                isCollapsed: false,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: appBarColor,
+                                    )),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: appBarColor)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: appBarColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                )),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                BalanceInput(balanceController: _balanceController),
+                SizedBox(height: 10.h),
+                GetBalanceButton()
               ],
             ),
           ),
@@ -916,4 +1013,134 @@ Future addBalanceMethod(BuildContext context) async {
       );
     },
   );
+}
+
+class BalanceInput extends ConsumerWidget {
+  const BalanceInput({
+    super.key,
+    required TextEditingController balanceController,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Center(
+      child: Container(
+        width: 100.w,
+        child: Form(
+          child: TextFormField(
+            maxLength: 6,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              ref.read(balanceUpdate.notifier).state = value;
+            },
+            decoration: InputDecoration(
+                counterText: "",
+                hintStyle: GoogleFonts.roboto(),
+                hintText: "Bakiye",
+                isCollapsed: false,
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                      color: appBarColor,
+                    )),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: appBarColor)),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: appBarColor,
+                  ),
+                  borderRadius: BorderRadius.circular(30),
+                )),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class GetBalanceButton extends ConsumerWidget {
+  const GetBalanceButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      onTap: () {
+        int first = int.parse(ref.watch(balanceProvider));
+        int second = int.parse(ref.watch(balanceUpdate));
+
+        int last = first + second;
+        ref.read(balanceProvider.notifier).state = last.toString();
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 100.w),
+        child: Container(
+          height: 50.h,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: appBarColor,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Center(
+            child: Text(
+              "Onayla",
+              style: GoogleFonts.roboto(
+                  textStyle: TextStyle(
+                      fontSize: 16.h,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class BalanceInputs extends StatelessWidget {
+  final int maxL;
+  final String hintText;
+  final TextInputType keyboardType;
+  const BalanceInputs({
+    super.key,
+    required this.maxL,
+    required this.hintText,
+    required this.keyboardType,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40.w),
+      child: Form(
+        child: TextFormField(
+          maxLength: maxL,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(
+              counterText: "",
+              hintStyle: GoogleFonts.roboto(),
+              hintText: hintText,
+              isCollapsed: false,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide(
+                    color: appBarColor,
+                  )),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              disabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: appBarColor)),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: appBarColor,
+                ),
+                borderRadius: BorderRadius.circular(30),
+              )),
+        ),
+      ),
+    );
+  }
 }

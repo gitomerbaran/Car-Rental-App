@@ -2,6 +2,7 @@ import 'package:car_rental_app/account_files/create_account_page.dart';
 import 'package:car_rental_app/account_files/account_page_providers.dart';
 import 'package:car_rental_app/functions.dart';
 import 'package:car_rental_app/home_page_files/home_page.dart';
+import 'package:car_rental_app/manager_files/manager_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -121,91 +122,64 @@ class CheckBox extends ConsumerWidget {
   }
 }
 
-class LoginButton extends StatelessWidget {
-  const LoginButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Veritabanı ve doğrulama
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage(),
-            ));
-      },
-      child: Container(
-        height: 50,
-        width: 150,
-        decoration: BoxDecoration(
-            color: appBarColor, borderRadius: BorderRadius.circular(30)),
-        child: Center(
-          child: Text(
-            "Giriş Yap",
-            style: GoogleFonts.roboto(
-                textStyle: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600)),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PasswordForm extends StatelessWidget {
+class PasswordForm extends ConsumerWidget {
   const PasswordForm({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 50,
-      child: TextFormField(
-        obscureText: true,
-        decoration: InputDecoration(
-          hintText: "Şifre",
-          hintStyle: fonts,
-          isCollapsed: false,
-          contentPadding: const EdgeInsets.only(left: 15),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          focusedBorder: OutlineInputBorder(
+      child: Form(
+        // key: ref.watch(pwLoginKey),
+        child: TextFormField(
+          obscureText: true,
+          decoration: InputDecoration(
+            hintText: "Şifre",
+            hintStyle: fonts,
+            isCollapsed: false,
+            contentPadding: const EdgeInsets.only(left: 15),
+            border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide(color: appBarColor, width: 1.5)),
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30.0),
+                borderSide: BorderSide(color: appBarColor, width: 1.5)),
+          ),
         ),
       ),
     );
   }
 }
 
-class UserNameForm extends StatelessWidget {
+class UserNameForm extends ConsumerWidget {
   const UserNameForm({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
       height: 50,
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: "Kullanıcı adı",
-          hintStyle: fonts,
-          isCollapsed: false,
-          contentPadding: const EdgeInsets.only(left: 15),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          focusedBorder: OutlineInputBorder(
+      child: Form(
+        //   key: ref.watch(userLoginKey),
+        child: TextFormField(
+          onChanged: (value) {
+            ref.read(userNameProvider.notifier).state = value;
+          },
+          decoration: InputDecoration(
+            hintText: "Kullanıcı adı",
+            hintStyle: fonts,
+            isCollapsed: false,
+            contentPadding: const EdgeInsets.only(left: 15),
+            border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide(color: appBarColor, width: 1.5)),
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30.0),
+                borderSide: BorderSide(color: appBarColor, width: 1.5)),
+          ),
         ),
       ),
     );
@@ -243,14 +217,52 @@ class MyAppBar extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: EdgeInsets.only(top: 30.h),
-            /* child: Text("RentEasy",
-                style: GoogleFonts.berkshireSwash(
-                    textStyle: TextStyle(
-                  fontSize: 40.h,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ))), */
           ),
         ));
+  }
+}
+
+class LoginButton extends ConsumerWidget {
+  const LoginButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      onTap: () {
+        debugPrint(ref.watch(userNameProvider));
+        // Veritabanı ve doğrulama
+        if (ref.watch(userNameProvider) == "admin") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ManagerPage(),
+              ));
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePage(),
+              ));
+        }
+      },
+      child: Container(
+        height: 50,
+        width: 150,
+        decoration: BoxDecoration(
+            color: appBarColor, borderRadius: BorderRadius.circular(30)),
+        child: Center(
+          child: Text(
+            "Giriş Yap",
+            style: GoogleFonts.roboto(
+                textStyle: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600)),
+          ),
+        ),
+      ),
+    );
   }
 }

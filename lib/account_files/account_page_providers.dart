@@ -36,3 +36,11 @@ final pwKey = Provider<GlobalKey<FormState>>((ref) {
 final rpwKey = Provider<GlobalKey<FormState>>((ref) {
   return GlobalKey<FormState>();
 });
+
+final userLoginKey = Provider<GlobalKey<FormState>>((ref) {
+  return GlobalKey<FormState>();
+});
+
+final pwLoginKey = Provider<GlobalKey<FormState>>((ref) {
+  return GlobalKey<FormState>();
+});
