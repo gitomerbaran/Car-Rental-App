@@ -6,14 +6,17 @@ class Vehicle {
   String vBrand;
   String kilometers;
   String vehicleId;
-  Vehicle(this.vName, this.vBrand, this.vYear, this.kilometers, this.vehicleId);
+  String vehicleGear;
+  String vehicleDoor;
+  String vehicleColor;
+  Vehicle(this.vName, this.vBrand, this.vYear, this.kilometers, this.vehicleId,this.vehicleGear,this.vehicleDoor,this.vehicleColor);
 }
 
 class VehicleNotifier extends StateNotifier<Map<String, Vehicle>> {
   VehicleNotifier()
       : super({
-          "s": Vehicle("deneme", "vBrand", "vYear", "kilometers", "vehicleId"),
-          "a": Vehicle("2", "2", "2", "3", "2")
+          "s": Vehicle("BMW", "520D", "2015", "136.000", "1","Manuel","4","Siyah"),
+          "a": Vehicle("AUDI", "A4", "2013", "210.000", "2","Otomatik","4","Beyaz")
         });
 
   void addVehicle(Vehicle newVehicle) {

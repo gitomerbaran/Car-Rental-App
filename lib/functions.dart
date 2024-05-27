@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'home_page_files/home_page.dart';
+
 Color appBarColor = Colors.red;
 TextStyle fonts = GoogleFonts.roboto();
 TextStyle calendarFunction(double fontsize, FontWeight fontWeight) {
@@ -82,8 +84,6 @@ Future<void> errorDialog(BuildContext context) {
       );
     },
   );
-
-  
 }
 
 Future<void> rentPage(BuildContext context, WidgetRef ref) {
@@ -143,7 +143,8 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                             Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: const Color.fromARGB(255, 247, 239, 239),
+                                  color:
+                                      const Color.fromARGB(255, 247, 239, 239),
                                   boxShadow: const [
                                     BoxShadow(
                                       blurRadius: 5,
@@ -151,7 +152,7 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                                       offset: Offset(1, 3),
                                     )
                                   ]),
-                              height: 150.h,
+                              height: 200.h,
                               width: double.infinity,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -174,6 +175,12 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                                                   "Model", vehicle.vYear),
                                               vehicleCardText("Kilometre",
                                                   vehicle.kilometers),
+                                              vehicleCardText("Kapı Sayısı:",
+                                                  vehicle.vehicleDoor),
+                                              vehicleCardText("Vites Türü",
+                                                  vehicle.vehicleGear),
+                                              vehicleCardText(
+                                                  "Renk", vehicle.vehicleColor)
                                             ],
                                           ),
                                           Icon(
@@ -255,5 +262,156 @@ Widget vehicleCardText(String title, String data) {
         )),
       ),
     ],
+  );
+}
+
+Future addBalanceMethod(BuildContext context) async {
+  TextEditingController controller = TextEditingController();
+  TextEditingController balanceController = TextEditingController();
+  return await showDialog<Future>(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 120.h),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Colors.white,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 20.h, left: 20.w),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: appBarColor,
+                          size: 30,
+                        ),
+                      ),
+                      // SizedBox(width: 80.w),
+                      Expanded(
+                        child: Center(
+                          child: Text("Bakiye Yükleme",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.berkshireSwash(
+                                  textStyle: TextStyle(
+                                fontSize: 20.h,
+                                color: appBarColor,
+                                fontWeight: FontWeight.w600,
+                              ))),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                const BalanceInputs(
+                  maxL: 16,
+                  hintText: "Kart Numarası",
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 15.h),
+                const BalanceInputs(
+                    maxL: 30,
+                    hintText: "Adı-Soyadı",
+                    keyboardType: TextInputType.name),
+                SizedBox(height: 15.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 100.w,
+                        child: Form(
+                          child: TextFormField(
+                            controller: controller,
+                            onChanged: (value) {
+                              if (value.length == 3 && !value.contains('/')) {
+                                value = '${value.substring(0, 2)}/${value.substring(2)}';
+                              }
+                              controller.value = TextEditingValue(
+                                text: value,
+                                selection: TextSelection.collapsed(
+                                    offset: value.length),
+                              );
+                            },
+                            maxLength: 5,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                counterText: "",
+                                hintStyle: GoogleFonts.roboto(),
+                                hintText: "Ay/Yıl",
+                                isCollapsed: false,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: appBarColor,
+                                    )),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: appBarColor)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: appBarColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                )),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100.w,
+                        child: Form(
+                          child: TextFormField(
+                            maxLength: 3,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                counterText: "",
+                                hintStyle: GoogleFonts.roboto(),
+                                hintText: "CCV",
+                                isCollapsed: false,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: BorderSide(
+                                      color: appBarColor,
+                                    )),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: appBarColor)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: appBarColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                )),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 15.h),
+                BalanceInput(balanceController: balanceController),
+                SizedBox(height: 30.h),
+                const GetBalanceButton()
+              ],
+            ),
+          ),
+        ),
+      );
+    },
   );
 }

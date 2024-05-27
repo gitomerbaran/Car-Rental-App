@@ -160,7 +160,7 @@ class UserNameForm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    return SizedBox(
       height: 50,
       child: Form(
         //   key: ref.watch(userLoginKey),
@@ -237,7 +237,7 @@ class LoginButton extends ConsumerWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ManagerPage(),
+                builder: (context) => const ManagerPage(),
               ));
         } else {
           Navigator.push(
