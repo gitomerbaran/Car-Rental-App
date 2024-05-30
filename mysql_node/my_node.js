@@ -6,6 +6,7 @@ const connection = mysql.createConnection({
   user: 'root',
   password: '3Florotoluen.',
   database: 'mydb',
+  connectTimeout: 200000
 });
 
 // Bağlanma
@@ -14,17 +15,23 @@ connection.connect((err) => {
     console.error('Bağlantı hatası:', err.stack);
     return;
   }
+  
   console.log('MySQL sunucusuna bağlandı. Bağlantı kimliği:', connection.threadId);
+
+     connection.query('CALL SELECTORBRND(34);', (error, results, fields) => {
+    if (error) {
+      console.error('Sorgu hatası:', error);
+      return;
+    }
+    console.log('Sonuçlar:', results);
+
+    // Bağlantıyı kapatma
+    connection.end((err) => {
+      if (err) {
+        console.error('Bağlantı kapatma hatası:', err);
+        return;
+      }
+      console.log('Bağlantı başarıyla kapatıldı.');
+    });
+  }); 
 });
-
-
-/* connection.query('SELECT * FROM tablo', (error, results, fields) => {
-  if (error) {
-    console.error('Sorgu hatası:', error);
-    return;
-  }
-  console.log('Sonuçlar:', results);
-}); */
-
-// Bağlantıyı kapatma
-connection.end();
