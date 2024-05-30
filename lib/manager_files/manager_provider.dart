@@ -32,3 +32,6 @@ final colorMng = StateProvider<String>((ref) {
   return "null";
 });
 
+final plakaProvider = StateProvider<String>((ref) {
+  return "null";
+});

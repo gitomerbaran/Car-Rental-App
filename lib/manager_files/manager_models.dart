@@ -9,8 +9,9 @@ class VehicleManager {
   String door;
   String color;
   String id;
+  String plaka;
   VehicleManager(this.name, this.brand, this.year, this.kilometers, this.gear,
-      this.door, this.color,this.id);
+      this.door, this.color, this.id,this.plaka);
 }
 
 class VehicleManagerNotifier

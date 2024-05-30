@@ -171,7 +171,7 @@ class AddButton extends ConsumerWidget {
                 ref.watch(gearMng),
                 ref.watch(doorMng),
                 ref.watch(colorMng),
-                "null"));
+                "null",ref.watch(plakaProvider)));
 
         ref.invalidate(modelMng); //provider sıfırlama
         debugPrint(ref.watch(modelMng) + "----" + ref.watch(brandMng));
