@@ -302,7 +302,7 @@ class HomePage extends StatelessWidget {
                 SizedBox(height: 10.h),
                 // Tarih
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       decoration: BoxDecoration(
@@ -341,6 +341,39 @@ class HomePage extends StatelessWidget {
                                   CalendarWidget(),
                                 ],
                               ),
+                            ],
+                          )),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0,
+                            blurRadius: 20,
+
+                            offset: const Offset(0, 2), // Gölgenin konumu
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                          height: 80,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: appBarColor, width: 2),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Model",
+                                style: GoogleFonts.roboto(
+                                    textStyle: TextStyle(
+                                        fontSize: 13, color: appBarColor)),
+                              ),
+                              const SizedBox(height: 5),
+                              const VehicleModel(),
                             ],
                           )),
                     ),
@@ -476,6 +509,44 @@ class VehicleBrand extends ConsumerWidget {
           value: vehicleType,
           child: Text(
             vehicleType,
+            style: GoogleFonts.roboto(textStyle: const TextStyle(fontSize: 10)),
+          ),
+        );
+      }).toList(),
+      onChanged: (value) {
+        ref.read(selectedVehicleType.notifier).state = value!;
+      },
+    );
+  }
+}
+
+class VehicleModel extends ConsumerWidget {
+  const VehicleModel({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DropdownButton<String>(
+      underline: const DropdownButtonHideUnderline(child: SizedBox()),
+      iconDisabledColor: appBarColor,
+      iconEnabledColor: appBarColor,
+      hint: Text(
+        ref.watch(selectedVehicleType),
+        style: GoogleFonts.roboto(textStyle: const TextStyle(fontSize: 12)),
+      ),
+      borderRadius: BorderRadius.circular(20),
+      menuMaxHeight: 200.h,
+      style: GoogleFonts.roboto(
+        textStyle: const TextStyle(fontSize: 10, color: Colors.black),
+      ),
+      items: ref
+          .watch(vehicleTypeListP)
+          .map<DropdownMenuItem<String>>((String vehicleModel) {
+        return DropdownMenuItem<String>(
+          value: vehicleModel,
+          child: Text(
+            vehicleModel,
             style: GoogleFonts.roboto(textStyle: const TextStyle(fontSize: 10)),
           ),
         );
@@ -861,7 +932,6 @@ class CommitWidget extends StatelessWidget {
     );
   }
 }
-
 
 class BalanceInput extends ConsumerWidget {
   const BalanceInput({
