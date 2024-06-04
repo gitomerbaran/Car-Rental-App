@@ -44,6 +44,7 @@ dependencies:
   flutter_rating_bar:
   carousel_slider: ^4.2.1
   flutter_spinkit:
+  http:
 dev_dependencies:
   flutter_test:
     sdk: flutter

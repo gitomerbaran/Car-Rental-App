@@ -9,7 +9,15 @@ final emailProvider = StateProvider<String>((ref) {
   return "";
 });
 
-final userNameProvider = StateProvider<String>((ref) {
+final tcProvider = StateProvider<String>((ref) {
+  return "";
+});
+
+final accountNameProvider = StateProvider<String>((ref) {
+  return "";
+});
+
+final accountSurnameProvider = StateProvider<String>((ref) {
   return "";
 });
 
@@ -18,29 +26,6 @@ final passwordProvider = StateProvider<String>((ref) {
 });
 
 final rpasswordProvider = StateProvider<String>((ref) {
-  return "";
+  return "1";
 });
 
-final userKey = Provider<GlobalKey<FormState>>((ref) {
-  return GlobalKey<FormState>();
-});
-
-final mailKey = Provider<GlobalKey<FormState>>((ref) {
-  return GlobalKey<FormState>();
-});
-
-final pwKey = Provider<GlobalKey<FormState>>((ref) {
-  return GlobalKey<FormState>();
-});
-
-final rpwKey = Provider<GlobalKey<FormState>>((ref) {
-  return GlobalKey<FormState>();
-});
-
-final userLoginKey = Provider<GlobalKey<FormState>>((ref) {
-  return GlobalKey<FormState>();
-});
-
-final pwLoginKey = Provider<GlobalKey<FormState>>((ref) {
-  return GlobalKey<FormState>();
-});

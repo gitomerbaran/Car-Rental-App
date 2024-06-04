@@ -25,7 +25,7 @@ Future<void> performDatabaseOperation(
     await Future.delayed(const Duration(seconds: 2));
     rentPage(context, ref);
   } catch (e) {
-    errorDialog(context);
+    errorDialog(context, "Araç Bulunamadı", 60);
   } finally {
     ref.read(isLoading.notifier).state = false;
   }
@@ -33,7 +33,7 @@ Future<void> performDatabaseOperation(
   // İşlem tamamlandığında sonucu göster
 }
 
-Future<void> errorDialog(BuildContext context) {
+Future<void> errorDialog(BuildContext context, String text, double size) {
   return showDialog<Future>(
     context: context,
     builder: (context) {
@@ -52,12 +52,14 @@ Future<void> errorDialog(BuildContext context) {
                 color: appBarColor,
                 size: 60,
               ),
-              Text(
-                "Araç Bulunamadı",
-                style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                  fontSize: 25,
-                )),
+              Center(
+                child: Text(
+                  text,
+                  style: GoogleFonts.roboto(
+                      textStyle: TextStyle(
+                    fontSize: size,
+                  )),
+                ),
               ),
               InkWell(
                 onTap: () {
@@ -338,7 +340,8 @@ Future addBalanceMethod(BuildContext context) async {
                             controller: controller,
                             onChanged: (value) {
                               if (value.length == 3 && !value.contains('/')) {
-                                value = '${value.substring(0, 2)}/${value.substring(2)}';
+                                value =
+                                    '${value.substring(0, 2)}/${value.substring(2)}';
                               }
                               controller.value = TextEditingValue(
                                 text: value,

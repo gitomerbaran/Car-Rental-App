@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:car_rental_app/account_files/create_account_page.dart';
 import 'package:car_rental_app/account_files/account_page_providers.dart';
 import 'package:car_rental_app/functions.dart';
@@ -28,7 +30,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 50.h),
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 60.w),
-                    child: const UserNameForm()),
+                    child: const TcForm()),
                 SizedBox(height: 20.h),
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 60.w),
@@ -153,8 +155,8 @@ class PasswordForm extends ConsumerWidget {
   }
 }
 
-class UserNameForm extends ConsumerWidget {
-  const UserNameForm({
+class TcForm extends ConsumerWidget {
+  const TcForm({
     super.key,
   });
 
@@ -165,11 +167,14 @@ class UserNameForm extends ConsumerWidget {
       child: Form(
         //   key: ref.watch(userLoginKey),
         child: TextFormField(
+          maxLength: 11,
+          keyboardType: TextInputType.number,
           onChanged: (value) {
-            ref.read(userNameProvider.notifier).state = value;
+            ref.read(tcProvider.notifier).state = value;
           },
           decoration: InputDecoration(
-            hintText: "Kullanıcı adı",
+            counterText: "",
+            hintText: "Tc No",
             hintStyle: fonts,
             isCollapsed: false,
             contentPadding: const EdgeInsets.only(left: 15),
@@ -230,16 +235,16 @@ class LoginButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {
-        debugPrint(ref.watch(userNameProvider));
-        // Veritabanı ve doğrulama
-        if (ref.watch(userNameProvider) == "admin") {
+      onTap: () async {
+        await Future.delayed(const Duration(seconds: 2));
+        if (ref.watch(tcProvider) == 4423 ||
+            ref.watch(passwordProvider) == "admin") {
           Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const ManagerPage(),
               ));
-        } else {
+        } else if (await loginMethod(ref, context) == true) {
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -264,5 +269,25 @@ class LoginButton extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> loginMethod(WidgetRef ref, BuildContext context) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'tc': ref.watch(tcProvider),
+        'password': ref.watch(passwordProvider),
+      }),
+    );
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Giriş başarılı!')));
+      return true;
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed')));
+      return false;
+    }
   }
 }

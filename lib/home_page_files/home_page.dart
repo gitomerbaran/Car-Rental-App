@@ -788,49 +788,6 @@ class NameWidget extends ConsumerWidget {
   }
 }
 
-class RentButton extends StatelessWidget {
-  const RentButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Araç Kiralama sayfası
-      },
-      child: Container(
-        height: 80,
-        width: 80,
-        decoration: BoxDecoration(
-            color: appBarColor, borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const Icon(
-                Icons.drive_eta,
-                color: Colors.white,
-                size: 35,
-              ),
-              SizedBox(height: 5.h),
-              Text(
-                "Kirala",
-                style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white)),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class HomePageAppBar extends StatelessWidget {
   const HomePageAppBar({
     super.key,
@@ -921,9 +878,9 @@ class CommitWidget extends StatelessWidget {
                 textAlign: TextAlign.start,
                 style: const TextStyle(fontSize: 14),
                 maxLines:
-                    6, // Metnin kaç satıra sığmasını istediğinizi belirleyebilirsiniz.
+                    6, 
                 overflow: TextOverflow
-                    .ellipsis, // Metin sığmadığında nasıl davranılacağını belirler.
+                    .ellipsis, 
               ),
             ),
           )

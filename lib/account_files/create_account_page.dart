@@ -1,11 +1,15 @@
 import 'package:car_rental_app/account_files/account_page_providers.dart';
 import 'package:car_rental_app/account_files/login_page.dart';
 import 'package:car_rental_app/functions.dart';
+import 'package:car_rental_app/home_page_files/home_page_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -27,31 +31,41 @@ class RegisterPage extends StatelessWidget {
                     padding: EdgeInsets.only(top: 30.h, left: 30.w),
                     child: const BackPageButton(),
                   ),
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 5.h),
                   const Center(
                     child: RegisterThemeText(),
                   ),
-                  SizedBox(height: 60.h),
+                  SizedBox(height: 40.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50.w),
-                    child: const UsernameFormRegister(),
+                    child: const TcForm(),
+                  ),
+                  SizedBox(height: 20.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50.w),
+                    child: const NameForRegister(),
+                  ),
+                  SizedBox(height: 5.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50.w),
+                    child: const SurnameFormRegister(),
                   ),
                   SizedBox(height: 5.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50.w),
                     child: const MailFormRegister(),
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 5.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50.w),
-                    child: const PasswordForm(),
+                    child: const PasswordFormRegister(),
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 5.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50.w),
                     child: const RePasswordFormRegister(),
                   ),
-                  SizedBox(height: 15.h),
+                  SizedBox(height: 20.h),
                   const Center(child: CreateButton()),
                 ],
               ),
@@ -80,16 +94,19 @@ class RegisterThemeText extends StatelessWidget {
   }
 }
 
-class BackPageButton extends StatelessWidget {
+class BackPageButton extends ConsumerWidget {
   const BackPageButton({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {
-        Navigator.pop(context);
+      onTap: () async {
+        await resetProviders(ref);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
       },
       child: Container(
         height: 40,
@@ -116,42 +133,26 @@ class PasswordFormRegister extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 70,
-      child: Form(
-        key: ref.watch(pwKey),
-        child: TextFormField(
-          inputFormatters: [
-            FilteringTextInputFormatter.deny(RegExp(r'\s')),
-          ],
-          enableInteractiveSelection: false,
-          validator: (value) {
-            value = "";
-            if (ref.watch(pwKey).currentState == null) {
-              return "Null";
-            }
-            if (value.isEmpty) {
-              return 'Bu alan boş bırakılamaz';
-            } else if (value.length < 6) {
-              return 'En az 6 karakter giriniz';
-            } else {
-              return null;
-            }
-          },
-          onSaved: (value) {
-            ref.read(userNameProvider.notifier).state = value!;
-          },
-          obscureText: true,
-          decoration: InputDecoration(
-            hintText: "Şifre",
-            hintStyle: fonts,
-            isCollapsed: false,
-            contentPadding: const EdgeInsets.only(left: 15),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(color: appBarColor, width: 1.5)),
+      child: TextFormField(
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
+        enableInteractiveSelection: false,
+        onChanged: (value) {
+          ref.read(passwordProvider.notifier).state = value;
+        },
+        obscureText: true,
+        decoration: InputDecoration(
+          hintText: "Şifre",
+          hintStyle: fonts,
+          isCollapsed: false,
+          contentPadding: const EdgeInsets.only(left: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: appBarColor, width: 1.5)),
         ),
       ),
     );
@@ -167,47 +168,34 @@ class RePasswordFormRegister extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 70,
-      child: Form(
-        key: ref.watch(rpwKey),
-        child: TextFormField(
-          inputFormatters: [
-            FilteringTextInputFormatter.deny(RegExp(r'\s')),
-          ],
-          enableInteractiveSelection: false,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'Bu alan boş bıraklamaz';
-            }
-            if (value != ref.watch(passwordProvider)) {
-              return 'Şifreniz uyuşmuyor';
-            }
-
-            return null;
-          },
-          onSaved: (value) {
-            ref.read(rpasswordProvider.notifier).state = value!;
-          },
-          obscureText: true,
-          decoration: InputDecoration(
-            hintText: "Şifrenizi Doğrulayın",
-            hintStyle: fonts,
-            isCollapsed: false,
-            contentPadding: const EdgeInsets.only(left: 15),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(color: appBarColor, width: 1.5)),
+      child: TextFormField(
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
+        enableInteractiveSelection: false,
+        onChanged: (value) {
+          ref.read(rpasswordProvider.notifier).state = value;
+        },
+        obscureText: true,
+        decoration: InputDecoration(
+          hintText: "Şifrenizi Doğrulayın",
+          hintStyle: fonts,
+          isCollapsed: false,
+          contentPadding: const EdgeInsets.only(left: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: appBarColor, width: 1.5)),
         ),
       ),
     );
   }
 }
 
-class UsernameFormRegister extends ConsumerWidget {
-  const UsernameFormRegister({
+class SurnameFormRegister extends ConsumerWidget {
+  const SurnameFormRegister({
     super.key,
   });
 
@@ -215,37 +203,92 @@ class UsernameFormRegister extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 70,
-      child: Form(
-        key: ref.watch(userKey),
-        child: TextFormField(
-          enableInteractiveSelection: false,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'Bu alan boş bırakılamaz';
-            } else if (value.length < 6) {
-              return 'En az 6 karakter giriniz';
-            } else {
-              return null;
-            }
-          },
-          onSaved: (value) {
-            ref.read(userNameProvider.notifier).state = value!;
-          },
-          inputFormatters: [
-            FilteringTextInputFormatter.deny(RegExp(r'\s')),
-          ],
-          decoration: InputDecoration(
-            hintText: "Kullanıcı Adı",
-            hintStyle: fonts,
-            isCollapsed: false,
-            contentPadding: const EdgeInsets.only(left: 15),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(color: appBarColor, width: 1.5)),
+      child: TextFormField(
+        enableInteractiveSelection: false,
+        keyboardType: TextInputType.name,
+        onChanged: (value) {
+          ref.read(accountSurnameProvider.notifier).state = value;
+        },
+        decoration: InputDecoration(
+          hintText: "Soyad",
+          hintStyle: fonts,
+          isCollapsed: false,
+          contentPadding: const EdgeInsets.only(left: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: appBarColor, width: 1.5)),
+        ),
+      ),
+    );
+  }
+}
+
+class NameForRegister extends ConsumerWidget {
+  const NameForRegister({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      height: 70,
+      child: TextFormField(
+        enableInteractiveSelection: false,
+        keyboardType: TextInputType.name,
+        onChanged: (value) {
+          ref.read(accountNameProvider.notifier).state = value;
+        },
+        decoration: InputDecoration(
+          hintText: "İsim",
+          hintStyle: fonts,
+          isCollapsed: false,
+          contentPadding: const EdgeInsets.only(left: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: appBarColor, width: 1.5)),
+        ),
+      ),
+    );
+  }
+}
+
+class TcForCreateAccount extends ConsumerWidget {
+  const TcForCreateAccount({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      height: 70,
+      child: TextFormField(
+        maxLength: 11,
+        enableInteractiveSelection: false,
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          ref.read(tcProvider.notifier).state = value;
+        },
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        ],
+        decoration: InputDecoration(
+          counterText: "",
+          hintText: "TC",
+          hintStyle: fonts,
+          isCollapsed: false,
+          contentPadding: const EdgeInsets.only(left: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: appBarColor, width: 1.5)),
         ),
       ),
     );
@@ -261,34 +304,22 @@ class MailFormRegister extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 70,
-      child: Form(
-        key: ref.watch(mailKey),
-        child: TextFormField(
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'Bu alan boş bırakılamaz';
-            }
-            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-              return 'Geçerli bir mail giriniz';
-            }
-            return null;
-          },
-          onSaved: (value) {
-            ref.read(emailProvider.notifier).state = value!;
-          },
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            hintText: "Email",
-            hintStyle: fonts,
-            isCollapsed: false,
-            contentPadding: const EdgeInsets.only(left: 15),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(color: appBarColor, width: 1.5)),
+      child: TextFormField(
+        onChanged: (value) {
+          ref.read(emailProvider.notifier).state = value;
+        },
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          hintText: "Email",
+          hintStyle: fonts,
+          isCollapsed: false,
+          contentPadding: const EdgeInsets.only(left: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: appBarColor, width: 1.5)),
         ),
       ),
     );
@@ -303,11 +334,26 @@ class CreateButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {
-        if (ref.watch(userKey).currentState!.validate() &&
-            ref.watch(mailKey).currentState!.validate() &&
-            ref.watch(pwKey).currentState!.validate() &&
-            ref.watch(rpwKey).currentState!.validate()) {}
+      onTap: () async {
+        if (validate(ref) == true) {
+          ref.read(isLoading.notifier).state = true;
+          await Future.delayed(const Duration(seconds: 2));
+          try {
+            await _register(ref, context);
+            await resetProviders(ref);
+
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          } catch (e) {
+            debugPrint("hata");
+            errorDialog(context, "Sunucu Hatası", 30.h);
+          } finally {
+            ref.read(isLoading.notifier).state = false;
+          }
+        } else {
+          errorDialog(context, "Girilen Bilgiler Yanlış veya Eksik", 18.h);
+        }
       },
       child: Container(
         height: 50,
@@ -315,16 +361,70 @@ class CreateButton extends ConsumerWidget {
         decoration: BoxDecoration(
             color: appBarColor, borderRadius: BorderRadius.circular(30)),
         child: Center(
-          child: Text(
-            "Kayıt Ol",
-            style: GoogleFonts.roboto(
-                textStyle: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600)),
-          ),
+          child: ref.watch(isLoading)
+              ? const SpinKitFadingCircle(
+                  color: Colors.white,
+                  size: 30,
+                )
+              : Text(
+                  "Kayıt Ol",
+                  style: GoogleFonts.roboto(
+                      textStyle: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600)),
+                ),
         ),
       ),
     );
   }
+
+  Future<void> _register(WidgetRef ref, BuildContext context) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/register'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'tc': ref.watch(tcProvider),
+        'ad': ref.watch(accountNameProvider),
+        'soyad': ref.watch(accountSurnameProvider),
+        'mail': ref.watch(emailProvider),
+        'password': ref.watch(passwordProvider)
+      }),
+    );
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Kayıt başarılı!')));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Kayıt başarısız!')));
+    }
+  }
+}
+
+bool validate(WidgetRef ref) {
+  final tc = ref.watch(tcProvider);
+  final name = ref.watch(accountNameProvider);
+  final surname = ref.watch(accountSurnameProvider);
+  final email = ref.watch(emailProvider);
+  final pw = ref.watch(passwordProvider);
+  final rpw = ref.watch(rpasswordProvider);
+
+  if (tc.length == 11 &&
+      name.isNotEmpty &&
+      surname.isNotEmpty &&
+      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email) &&
+      pw == rpw) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+Future<void> resetProviders(WidgetRef ref) async {
+  ref.invalidate(tcProvider);
+  ref.invalidate(accountNameProvider);
+  ref.invalidate(accountSurnameProvider);
+  ref.invalidate(emailProvider);
+  ref.invalidate(passwordProvider);
+  ref.invalidate(rpasswordProvider);
 }
