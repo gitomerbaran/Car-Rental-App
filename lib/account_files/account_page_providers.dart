@@ -9,8 +9,8 @@ final emailProvider = StateProvider<String>((ref) {
   return "";
 });
 
-final tcProvider = StateProvider<String>((ref) {
-  return "";
+final tcProvider = StateProvider<int>((ref) {
+  return 0;
 });
 
 final accountNameProvider = StateProvider<String>((ref) {
@@ -29,3 +29,6 @@ final rpasswordProvider = StateProvider<String>((ref) {
   return "1";
 });
 
+final statusProvider = StateProvider<dynamic>((ref) {
+  return "";
+});

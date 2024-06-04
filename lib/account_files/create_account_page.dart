@@ -38,7 +38,7 @@ class RegisterPage extends StatelessWidget {
                   SizedBox(height: 40.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50.w),
-                    child: const TcForm(),
+                    child: const TcForCreateAccount(),
                   ),
                   SizedBox(height: 20.h),
                   Padding(
@@ -272,7 +272,7 @@ class TcForCreateAccount extends ConsumerWidget {
         enableInteractiveSelection: false,
         keyboardType: TextInputType.number,
         onChanged: (value) {
-          ref.read(tcProvider.notifier).state = value;
+          ref.read(tcProvider.notifier).state = int.parse(value);
         },
         inputFormatters: [
           FilteringTextInputFormatter.deny(RegExp(r'\s')),
@@ -339,12 +339,14 @@ class CreateButton extends ConsumerWidget {
           ref.read(isLoading.notifier).state = true;
           await Future.delayed(const Duration(seconds: 2));
           try {
+            await Future.delayed(const Duration(seconds: 5));
             await _register(ref, context);
+
             await resetProviders(ref);
 
-            Navigator.of(context).pushReplacement(
+            /*   Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => LoginPage()),
-            );
+            ); */
           } catch (e) {
             debugPrint("hata");
             errorDialog(context, "Sunucu Hatası", 30.h);
@@ -380,23 +382,31 @@ class CreateButton extends ConsumerWidget {
   }
 
   Future<void> _register(WidgetRef ref, BuildContext context) async {
-    final response = await http.post(
-      Uri.parse('http://localhost:3000/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'tc': ref.watch(tcProvider),
-        'ad': ref.watch(accountNameProvider),
-        'soyad': ref.watch(accountSurnameProvider),
-        'mail': ref.watch(emailProvider),
-        'password': ref.watch(passwordProvider)
-      }),
-    );
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Kayıt başarılı!')));
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Kayıt başarısız!')));
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3001/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'tc': ref.watch(tcProvider),
+          'ad': ref.watch(accountNameProvider),
+          'soyad': ref.watch(accountSurnameProvider),
+          'mail': ref.watch(emailProvider),
+          'password': ref.watch(passwordProvider)
+        }),
+      );
+      ref.read(statusProvider.notifier).state = response.statusCode;
+      debugPrint(response.statusCode.toString());
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Kayıt başarılı!')));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Kayıt başarısız!')));
+      }
+    } catch (e) {
+      print('Hata oluştu: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Bir hata oluştu. Lütfen tekrar deneyin.')));
     }
   }
 }
@@ -409,8 +419,7 @@ bool validate(WidgetRef ref) {
   final pw = ref.watch(passwordProvider);
   final rpw = ref.watch(rpasswordProvider);
 
-  if (tc.length == 11 &&
-      name.isNotEmpty &&
+  if (name.isNotEmpty &&
       surname.isNotEmpty &&
       RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email) &&
       pw == rpw) {

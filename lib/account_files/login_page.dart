@@ -30,7 +30,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 50.h),
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 60.w),
-                    child: const TcForm()),
+                    child: const MailForm()),
                 SizedBox(height: 20.h),
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 60.w),
@@ -133,30 +133,30 @@ class PasswordForm extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 50,
-      child: Form(
-        // key: ref.watch(pwLoginKey),
-        child: TextFormField(
-          obscureText: true,
-          decoration: InputDecoration(
-            hintText: "Şifre",
-            hintStyle: fonts,
-            isCollapsed: false,
-            contentPadding: const EdgeInsets.only(left: 15),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(color: appBarColor, width: 1.5)),
+      child: TextFormField(
+        obscureText: true,
+        onChanged: (value) {
+          ref.read(passwordProvider.notifier).state = value;
+        },
+        decoration: InputDecoration(
+          hintText: "Şifre",
+          hintStyle: fonts,
+          isCollapsed: false,
+          contentPadding: const EdgeInsets.only(left: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: appBarColor, width: 1.5)),
         ),
       ),
     );
   }
 }
 
-class TcForm extends ConsumerWidget {
-  const TcForm({
+class MailForm extends ConsumerWidget {
+  const MailForm({
     super.key,
   });
 
@@ -164,27 +164,23 @@ class TcForm extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 50,
-      child: Form(
-        //   key: ref.watch(userLoginKey),
-        child: TextFormField(
-          maxLength: 11,
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-            ref.read(tcProvider.notifier).state = value;
-          },
-          decoration: InputDecoration(
-            counterText: "",
-            hintText: "Tc No",
-            hintStyle: fonts,
-            isCollapsed: false,
-            contentPadding: const EdgeInsets.only(left: 15),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide(color: appBarColor, width: 1.5)),
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        onChanged: (value) {
+          ref.read(emailProvider.notifier).state = value;
+        },
+        decoration: InputDecoration(
+          counterText: "",
+          hintText: "Mail",
+          hintStyle: fonts,
+          isCollapsed: false,
+          contentPadding: const EdgeInsets.only(left: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: appBarColor, width: 1.5)),
         ),
       ),
     );
@@ -237,15 +233,16 @@ class LoginButton extends ConsumerWidget {
     return InkWell(
       onTap: () async {
         await Future.delayed(const Duration(seconds: 2));
-        if (ref.watch(tcProvider) == 4423 ||
+        if (ref.watch(emailProvider) == "admin@admin.com" ||
             ref.watch(passwordProvider) == "admin") {
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => const ManagerPage(),
               ));
         } else if (await loginMethod(ref, context) == true) {
-          Navigator.push(
+          debugPrint(ref.watch(tcProvider).toString());
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => const HomePage(),
@@ -273,18 +270,23 @@ class LoginButton extends ConsumerWidget {
 
   Future<bool> loginMethod(WidgetRef ref, BuildContext context) async {
     final response = await http.post(
-      Uri.parse('http://localhost:3000/login'),
+      Uri.parse('http://localhost:3001/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'tc': ref.watch(tcProvider),
+        'mail': ref.watch(emailProvider),
         'password': ref.watch(passwordProvider),
       }),
     );
+
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Giriş başarılı!')));
+      debugPrint("Başarılı" + response.statusCode.toString());
+      final data = jsonDecode(response.body);
+      final tc = data['tc'];
+      // Örnek olarak 'tc' isminde bir alan varsayıyorum
+      ref.read(tcProvider.notifier).state = tc;
       return true;
     } else {
+      debugPrint(response.statusCode.toString());
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Failed')));
       return false;
