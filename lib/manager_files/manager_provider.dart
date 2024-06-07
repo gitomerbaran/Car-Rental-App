@@ -12,8 +12,8 @@ final brandMng = StateProvider<String>((ref) {
   return "null";
 });
 
-final yearMng = StateProvider<String>((ref) {
-  return "null";
+final yearMng = StateProvider<int>((ref) {
+  return 0;
 });
 
 final kilometersMng = StateProvider<String>((ref) {
@@ -24,14 +24,34 @@ final gearMng = StateProvider<String>((ref) {
   return "null";
 });
 
-final doorMng = StateProvider<String>((ref) {
-  return "null";
+final doorMng = StateProvider<int>((ref) {
+  return 0;
 });
 
 final colorMng = StateProvider<String>((ref) {
   return "null";
 });
 
-final plakaProvider = StateProvider<String>((ref) {
+final plateProvider = StateProvider<String>((ref) {
   return "null";
+});
+
+final cityMng = StateProvider<String>((ref) {
+  return "null";
+});
+
+final carPiece = StateProvider<int>((ref) {
+  return 0;
+});
+
+final fuelMng = StateProvider<String>((ref) {
+  return "";
+});
+
+final kmMng = StateProvider<String>((ref) {
+  return "null";
+});
+
+final priceMng = StateProvider<int>((ref) {
+  return 0;
 });

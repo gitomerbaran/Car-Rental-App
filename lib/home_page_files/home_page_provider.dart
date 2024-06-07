@@ -1,39 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-final nameProvider = StateProvider<String>((ref) {
-  return "test********";
-});
 
 final balanceProvider = StateProvider<String>((ref) {
   return "100";
 });
-
-final commetList = Provider<List<Commet>>((ref) {
-  return [
-    Commet('Audi A4', 'Günlük kiralama: \$50'),
-    Commet('Ford Mustang', 'Günlük kiralama: \$70'),
-    Commet('BMW X5', 'Günlük kiralama: \$80'),
-    Commet('Toyota Corolla', 'Günlük kiralama: \$40'),
-  ];
-});
-
-class Commet {
-  final String name;
-  final String carName;
-
-  Commet(this.name, this.carName);
-}
-
-List<String> cities = [
-  "İstanbul",
-  "Ankara",
-  "İzmir",
-  "Antalya",
-  "Samsun",
-  "Diyarbakır",
-  "Erzurum"
-];
 
 List<String> commits = [
   "Mükemmel bir hizmet aldım! Araba temiz ve bakımlıydı, personel çok yardımseverdi. Kesinlikle tekrar kiralarım!",
@@ -44,38 +15,27 @@ List<String> commits = [
 ];
 
 final selectedCity = StateProvider<String>((ref) {
-  return "İstanbul";
+  return "ISTANBUL";
 });
 
 final selectedSecondCity = StateProvider<String>((ref) {
-  return "Ankara";
-});
-
-//ARAÇ TÜRÜ
-final vehicleTypeListP = StateProvider<List<String>>((ref) {
-  return ["Null"];
+  return "ANKARA";
 });
 
 final selectedVehicleType = StateProvider<String>((ref) {
-  return "Null";
+  return "Seçiniz";
 });
 
 //ARAÇ MARKALARI
-final vehicleBrandListP = StateProvider<List<String>>((ref) {
-  return ["Null"];
-});
 
 final selectedVehicleBrand = StateProvider<String>((ref) {
-  return "Null";
+  return "Seçiniz";
 });
 
 //ARAÇ MODELLERİ
-final vehicleModelListP = StateProvider<List<String>>((ref) {
-  return ["Null"];
-});
 
 final selectedModel = StateProvider<String>((ref) {
-  return "Null";
+  return "Seçiniz";
 });
 
 //

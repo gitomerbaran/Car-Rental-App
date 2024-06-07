@@ -1,3 +1,4 @@
+import 'package:car_rental_app/account_files/account_page_providers.dart';
 import 'package:car_rental_app/home_page_files/home_page_provider.dart';
 import 'package:car_rental_app/home_page_files/models.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,13 @@ Future<void> performDatabaseOperation(
     // Veritabanı işlemini burada gerçekleştir
     // Bu kısmı kendi veritabanı sorgunuzla değiştirin
     await Future.delayed(const Duration(seconds: 2));
-    rentPage(context, ref);
+
+    await getCars(ref);
+    await rentPage(context, ref);
+    ref.invalidate(vehicleListProvider);
   } catch (e) {
-    errorDialog(context, "Araç Bulunamadı", 60);
+    errorDialog(context, "Araç Bulunamadı", 20.h);
+    print("çalışmadı rentpagetarafi");
   } finally {
     ref.read(isLoading.notifier).state = false;
   }
@@ -109,8 +114,9 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                     children: [
                       InkWell(
                         onTap: () {
+                          ref.read(vehicleListProvider).clear();
+
                           Navigator.pop(context);
-                          debugPrint(ref.watch(vehicleListProvider).toString());
                         },
                         child: Icon(
                           Icons.arrow_back_ios_new,
@@ -145,8 +151,7 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                             Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color:
-                                      const Color.fromARGB(255, 247, 239, 239),
+                                  color: Color.fromARGB(255, 245, 242, 242),
                                   boxShadow: const [
                                     BoxShadow(
                                       blurRadius: 5,
@@ -154,7 +159,7 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                                       offset: Offset(1, 3),
                                     )
                                   ]),
-                              height: 200.h,
+                              height: 400.h,
                               width: double.infinity,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -172,17 +177,27 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               vehicleCardText(
-                                                  "Marka", vehicle.vName),
+                                                  "Plaka:", vehicle.vPlate),
                                               vehicleCardText(
-                                                  "Model", vehicle.vYear),
-                                              vehicleCardText("Kilometre",
-                                                  vehicle.kilometers),
-                                              vehicleCardText("Kapı Sayısı:",
-                                                  vehicle.vehicleDoor),
-                                              vehicleCardText("Vites Türü",
-                                                  vehicle.vehicleGear),
+                                                  "Marka:", vehicle.vBrand),
                                               vehicleCardText(
-                                                  "Renk", vehicle.vehicleColor)
+                                                  "Araç Türü:", vehicle.vType),
+                                              vehicleCardText(
+                                                  "Model:", vehicle.vModel),
+                                              vehicleCardText(
+                                                  "Renk:", vehicle.vColor),
+                                              vehicleCardText("Vites Türü:",
+                                                  vehicle.vTransmitter),
+                                              vehicleCardText(
+                                                  "Yakıt:", vehicle.vFuel),
+                                              vehicleCardText("Kapı Adeti:",
+                                                  vehicle.vDoor.toString()),
+                                              vehicleCardText(
+                                                  "KM:", vehicle.vKm),
+                                              vehicleCardText("Yıl:",
+                                                  vehicle.vYear.toString()),
+                                              vehicleCardText("Fiyat",
+                                                  vehicle.vPrice.toString()),
                                             ],
                                           ),
                                           Icon(
@@ -193,8 +208,25 @@ Future<void> rentPage(BuildContext context, WidgetRef ref) {
                                         ],
                                       ),
                                       InkWell(
-                                        onTap: () {
+                                        onTap: () async {
+                                          debugPrint(vehicle.vPlate +
+                                              "+" +
+                                              ref.watch(tcProvider).toString());
                                           //Kiralama İşlemi
+                                          await sendRentCar(ref,
+                                              plate: vehicle.vPlate,
+                                              destination:
+                                                  ref.watch(selectedSecondCity),
+                                              takeTime: "2024-08-3",
+                                              releaseTime: "2024-12-8",
+                                              musteriTc: ref.watch(tcProvider));
+                                          debugPrint("çalıştım rent");
+                                          ref
+                                              .read(
+                                                  vehicleListProvider.notifier)
+                                              .state = [];
+
+                                          Navigator.pop(context);
                                         },
                                         child: Container(
                                           height: 30,
@@ -246,7 +278,7 @@ Widget vehicleCardText(String title, String data) {
   return Row(
     children: [
       Text(
-        "$title: ",
+        "$title ",
         style: GoogleFonts.roboto(
             textStyle: TextStyle(
           fontSize: 15.h,

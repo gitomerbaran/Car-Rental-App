@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:car_rental_app/functions.dart';
 import 'package:car_rental_app/home_page_files/home_page_provider.dart';
+import 'package:car_rental_app/home_page_files/models.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
@@ -302,7 +303,7 @@ class HomePage extends StatelessWidget {
                 SizedBox(height: 10.h),
                 // Tarih
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       decoration: BoxDecoration(
@@ -344,6 +345,7 @@ class HomePage extends StatelessWidget {
                             ],
                           )),
                     ),
+                    SizedBox(width: 88.w),
                     Container(
                       decoration: BoxDecoration(
                         boxShadow: [
@@ -402,7 +404,7 @@ class FindButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () async {
-        performDatabaseOperation(ref, context);
+        await performDatabaseOperation(ref, context);
       },
       child: Container(
         height: 50,
@@ -494,7 +496,7 @@ class VehicleBrand extends ConsumerWidget {
       iconDisabledColor: appBarColor,
       iconEnabledColor: appBarColor,
       hint: Text(
-        ref.watch(selectedVehicleType),
+        ref.watch(selectedVehicleBrand),
         style: GoogleFonts.roboto(textStyle: const TextStyle(fontSize: 12)),
       ),
       borderRadius: BorderRadius.circular(20),
@@ -503,7 +505,7 @@ class VehicleBrand extends ConsumerWidget {
         textStyle: const TextStyle(fontSize: 10, color: Colors.black),
       ),
       items: ref
-          .watch(vehicleTypeListP)
+          .watch(vehicleBrandsListNotifier)
           .map<DropdownMenuItem<String>>((String vehicleType) {
         return DropdownMenuItem<String>(
           value: vehicleType,
@@ -514,7 +516,7 @@ class VehicleBrand extends ConsumerWidget {
         );
       }).toList(),
       onChanged: (value) {
-        ref.read(selectedVehicleType.notifier).state = value!;
+        ref.read(selectedVehicleBrand.notifier).state = value!;
       },
     );
   }
@@ -522,8 +524,8 @@ class VehicleBrand extends ConsumerWidget {
 
 class VehicleModel extends ConsumerWidget {
   const VehicleModel({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -532,16 +534,16 @@ class VehicleModel extends ConsumerWidget {
       iconDisabledColor: appBarColor,
       iconEnabledColor: appBarColor,
       hint: Text(
-        ref.watch(selectedVehicleType),
+        ref.watch(selectedModel),
         style: GoogleFonts.roboto(textStyle: const TextStyle(fontSize: 12)),
       ),
       borderRadius: BorderRadius.circular(20),
-      menuMaxHeight: 200.h,
+      menuMaxHeight: 200,
       style: GoogleFonts.roboto(
         textStyle: const TextStyle(fontSize: 10, color: Colors.black),
       ),
       items: ref
-          .watch(vehicleTypeListP)
+          .watch(vehicleModelsNotifier)
           .map<DropdownMenuItem<String>>((String vehicleModel) {
         return DropdownMenuItem<String>(
           value: vehicleModel,
@@ -552,7 +554,7 @@ class VehicleModel extends ConsumerWidget {
         );
       }).toList(),
       onChanged: (value) {
-        ref.read(selectedVehicleType.notifier).state = value!;
+        ref.read(selectedModel.notifier).state = value!;
       },
     );
   }
@@ -579,7 +581,7 @@ class VehicleType extends ConsumerWidget {
         textStyle: const TextStyle(fontSize: 10, color: Colors.black),
       ),
       items: ref
-          .watch(vehicleTypeListP)
+          .watch(vehicleTypesNotifier)
           .map<DropdownMenuItem<String>>((String vehicleType) {
         return DropdownMenuItem<String>(
           value: vehicleType,
@@ -639,7 +641,9 @@ class SecondCity extends ConsumerWidget {
       style: GoogleFonts.roboto(
         textStyle: const TextStyle(fontSize: 10, color: Colors.black),
       ),
-      items: cities.map<DropdownMenuItem<String>>((String city) {
+      items: ref
+          .watch(getCityNotifier)
+          .map<DropdownMenuItem<String>>((String city) {
         return DropdownMenuItem<String>(
           value: city,
           child: Text(
@@ -675,7 +679,9 @@ class FirstCity extends ConsumerWidget {
       style: GoogleFonts.roboto(
         textStyle: const TextStyle(fontSize: 10, color: Colors.black),
       ),
-      items: cities.map<DropdownMenuItem<String>>((String city) {
+      items: ref
+          .watch(getCityNotifier)
+          .map<DropdownMenuItem<String>>((String city) {
         return DropdownMenuItem<String>(
           value: city,
           child: Text(
@@ -780,7 +786,7 @@ class NameWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Text(
-      "Hoşgeldin ${ref.watch(nameProvider)}",
+      "Hoşgeldiniz",
       style: GoogleFonts.roboto(
           textStyle:
               const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
@@ -877,10 +883,8 @@ class CommitWidget extends StatelessWidget {
                 text,
                 textAlign: TextAlign.start,
                 style: const TextStyle(fontSize: 14),
-                maxLines:
-                    6, 
-                overflow: TextOverflow
-                    .ellipsis, 
+                maxLines: 6,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           )

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:car_rental_app/home_page_files/models.dart';
+import 'package:car_rental_app/manager_files/manager_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:car_rental_app/account_files/create_account_page.dart';
 import 'package:car_rental_app/account_files/account_page_providers.dart';
@@ -235,12 +237,18 @@ class LoginButton extends ConsumerWidget {
         await Future.delayed(const Duration(seconds: 2));
         if (ref.watch(emailProvider) == "admin@admin.com" ||
             ref.watch(passwordProvider) == "admin") {
+          await fetchCustomers(ref);
+          debugPrint(ref.watch(customersList).toString());
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => const ManagerPage(),
               ));
         } else if (await loginMethod(ref, context) == true) {
+          await getBrands(ref);
+          await getModel(ref);
+          await getTypes(ref);
+          await getCity(ref);
           debugPrint(ref.watch(tcProvider).toString());
           Navigator.pushReplacement(
               context,
@@ -283,6 +291,7 @@ class LoginButton extends ConsumerWidget {
       final data = jsonDecode(response.body);
       final tc = data['tc'];
       // Örnek olarak 'tc' isminde bir alan varsayıyorum
+
       ref.read(tcProvider.notifier).state = tc;
       return true;
     } else {
