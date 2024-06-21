@@ -76,7 +76,8 @@ class Customer {
 }
 
 // customersList StateProvider'ı
-final customersList = StateProvider<Map<String, int>>((ref) => {});
+final customersList =
+    StateProvider<Map<String, int>>((ref) => {"34ABC123": 19276429456});
 
 // dropCustomer fonksiyonu
 Future<void> dropCustomer(WidgetRef ref,

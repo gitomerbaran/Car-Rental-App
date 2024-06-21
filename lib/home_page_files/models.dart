@@ -34,7 +34,11 @@ class Vehicle {
 }
 
 class VehicleNotifier extends StateNotifier<List<Vehicle>> {
-  VehicleNotifier() : super([]);
+  VehicleNotifier()
+      : super([
+          Vehicle("34ABC213", "BMW", "SUW", "X5", "SIYAH", "OTOMATIK", "DIZEL",
+              4, "0-30.000", 2019, 3500000)
+        ]);
 
   void addVehicle(Vehicle newVehicle) {
     state = [...state, newVehicle];

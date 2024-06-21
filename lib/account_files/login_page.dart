@@ -244,11 +244,11 @@ class LoginButton extends ConsumerWidget {
               MaterialPageRoute(
                 builder: (context) => const ManagerPage(),
               ));
-        } else if (await loginMethod(ref, context) == true) {
-          await getBrands(ref);
+        } else if (loginMethod(ref, context) == true) {
+          /*  await getBrands(ref);
           await getModel(ref);
           await getTypes(ref);
-          await getCity(ref);
+          await getCity(ref); */
           debugPrint(ref.watch(tcProvider).toString());
           Navigator.pushReplacement(
               context,
@@ -276,17 +276,17 @@ class LoginButton extends ConsumerWidget {
     );
   }
 
-  Future<bool> loginMethod(WidgetRef ref, BuildContext context) async {
-    final response = await http.post(
+  bool loginMethod(WidgetRef ref, BuildContext context) {
+    /* final response = await http.post(
       Uri.parse('http://localhost:3001/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'mail': ref.watch(emailProvider),
         'password': ref.watch(passwordProvider),
       }),
-    );
+    ); */
 
-    if (response.statusCode == 200) {
+    /* if (response.statusCode == 200) {
       debugPrint("Başarılı" + response.statusCode.toString());
       final data = jsonDecode(response.body);
       final tc = data['tc'];
@@ -294,11 +294,12 @@ class LoginButton extends ConsumerWidget {
 
       ref.read(tcProvider.notifier).state = tc;
       return true;
-    } else {
+    } */
+    return true; /* else {
       debugPrint(response.statusCode.toString());
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Failed')));
       return false;
-    }
+    } */
   }
 }
