@@ -3,10 +3,10 @@ on:
   workflow_dispatch:
   pull_request:
   push:
-    branches: # Specify your branches here
-      - main # The 'main' branch
-      - master # The 'master' branch
-      - 'releases/*' # The release branches
+    branches:
+      - main
+      - master
+      - 'releases/*'
 
 jobs:
   qodana:
@@ -18,10 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
-          fetch-depth: 0  # a full history is required for pull request analysis
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
-      - name: Set up Qodana configuration
+      - name: 'Set up Qodana configuration'
         run: |
           echo "version: '1.0'" > qodana.yaml
           echo "linter: jetbrains/qodana-dart" >> qodana.yaml
