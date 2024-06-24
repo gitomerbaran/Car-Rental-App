@@ -21,15 +21,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - name: 'Set up Qodana configuration'
-        run: |
-          echo "version: '1.0'" > qodana.yaml
-          echo "linter: jetbrains/qodana-dart" >> qodana.yaml
-
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2024.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
-        with:
-          cache-dir: ./qodana/cache
-          results-dir: ./qodana/results
