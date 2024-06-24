@@ -20,7 +20,16 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
           fetch-depth: 0  # a full history is required for pull request analysis
+
+      - name: Set up Qodana configuration
+        run: |
+          echo "version: '1.0'" > qodana.yaml
+          echo "linter: jetbrains/qodana-dart" >> qodana.yaml
+
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2024.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        with:
+          cache-dir: ./qodana/cache
+          results-dir: ./qodana/results
