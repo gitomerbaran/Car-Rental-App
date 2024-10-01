@@ -20,6 +20,7 @@ Future<void> performDatabaseOperation(
     WidgetRef ref, BuildContext context) async {
   ref.read(isLoading.notifier).state = true;
 
+
   try {
     // Veritabanı işlemini burada gerçekleştir
     // Bu kısmı kendi veritabanı sorgunuzla değiştirin
@@ -30,7 +31,7 @@ Future<void> performDatabaseOperation(
     ref.invalidate(vehicleListProvider);
   } catch (e) {
     errorDialog(context, "Araç Bulunamadı", 20.h);
-    
+
     rentPage(context, ref);
     print("çalışmadı rentpagetarafi");
   } finally {
