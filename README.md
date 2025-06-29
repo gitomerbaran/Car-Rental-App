@@ -49,12 +49,11 @@ cd Car-Rental-App
 flutter pub get
 flutter run
 ```
-## 📸 Screenshots 
-![WhatsApp Görsel 2025-06-29 saat 16 45 50_121d8436](https://github.com/user-attachments/assets/3a820719-fd36-4649-828f-c605a8dcec93) 
-![WhatsApp Görsel 2025-06-29 saat 16 45 50_62a77a00](https://github.com/user-attachments/assets/525b6ab1-f1e1-4eb1-9e07-376af706b411)
-![WhatsApp Görsel 2025-06-29 saat 16 45 50_10392e99](https://github.com/user-attachments/assets/e645d1c4-11c9-4f8f-b154-d6d682eb812d)
-![WhatsApp Görsel 2025-06-29 saat 16 45 50_afb229f9](https://github.com/user-attachments/assets/dd3b7a77-ab70-4d93-a64a-7ec234a7060b)
+## 📸 Screenshots
 
-
+<img src="https://github.com/user-attachments/assets/3a820719-fd36-4649-828f-c605a8dcec93" width="70%"/>
+<img src="https://github.com/user-attachments/assets/525b6ab1-f1e1-4eb1-9e07-376af706b411" width="70%"/>
+<img src="https://github.com/user-attachments/assets/e645d1c4-11c9-4f8f-b154-d6d682eb812d" width="70%"/>
+<img src="https://github.com/user-attachments/assets/dd3b7a77-ab70-4d93-a64a-7ec234a7060b" width="70%"/>
 
 
