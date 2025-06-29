@@ -28,9 +28,9 @@ This project was built as a personal learning exercise to improve my Flutter ski
 ## 🗂️ Project Structure
 
 lib/
-├── core/ # App-wide constants, configurations
-├── features/ # Feature modules (e.g., home, detail)
-└── product/ # Shared widgets, design elements
+** ├── core/ # App-wide constants, configurations
+** ├── features/ # Feature modules (e.g., home, detail)
+** └── product/ # Shared widgets, design elements
 
 
 ---
