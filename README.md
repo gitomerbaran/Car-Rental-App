@@ -1,16 +1,60 @@
-# car_rental_app
+# 🚗 Car Rental App
 
-A new Flutter project.
+A simple **Flutter** mobile application prototype for exploring a car rental workflow and practicing modular Flutter project organization.
 
-## Getting Started
+This project was built as a personal learning exercise to improve my Flutter skills, understand app structure organization, and experiment with basic service layers and navigation.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 📱 Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Home screen with car listings
+- Car detail screen
+- Basic navigation between screens
+- Organized folder structure for easier scaling
+- Placeholder service layers for future API integration
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 🛠️ Tech Stack
+
+- Flutter (Dart)
+- Material Design
+- Modular folder structure
+- Basic service classes
+
+---
+
+## 🗂️ Project Structure
+
+lib/
+├── core/ # App-wide constants, configurations
+├── features/ # Feature modules (e.g., home, detail)
+└── product/ # Shared widgets, design elements
+
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Flutter SDK installed
+- Connected device or emulator
+
+### Installation
+
+```bash
+git clone https://github.com/gitomerbaran/Car-Rental-App.git
+cd Car-Rental-App
+flutter pub get
+flutter run
+```
+## 📸 Screenshots 
+![WhatsApp Görsel 2025-06-29 saat 16 45 50_121d8436](https://github.com/user-attachments/assets/3a820719-fd36-4649-828f-c605a8dcec93) 
+![WhatsApp Görsel 2025-06-29 saat 16 45 50_62a77a00](https://github.com/user-attachments/assets/525b6ab1-f1e1-4eb1-9e07-376af706b411)
+![WhatsApp Görsel 2025-06-29 saat 16 45 50_10392e99](https://github.com/user-attachments/assets/e645d1c4-11c9-4f8f-b154-d6d682eb812d)
+![WhatsApp Görsel 2025-06-29 saat 16 45 50_afb229f9](https://github.com/user-attachments/assets/dd3b7a77-ab70-4d93-a64a-7ec234a7060b)
+
+
+
+
